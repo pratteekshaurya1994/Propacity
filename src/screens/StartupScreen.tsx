@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View, Image, Text} from 'react-native';
-import {NavigateTo} from '../constants';
+import {ImageConfig, NavigateTo} from '../constants';
 // import {Colors, ImageConfig, NavigateTo} from '../constants';
 
 const StartupScreen = (props: any) => {
@@ -8,19 +8,13 @@ const StartupScreen = (props: any) => {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log('Hello');
       navigation.navigate(NavigateTo.DashboardScreen);
     }, 2000);
   }, [navigation]);
 
   return (
     <View style={styles.container}>
-      <Text
-        style={{
-          color: 'red',
-        }}>
-        hello
-      </Text>
+      <Image source={ImageConfig.SplashImage} />
     </View>
   );
 };
@@ -30,6 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
   },
 });
 
