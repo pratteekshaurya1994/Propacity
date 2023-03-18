@@ -1,9 +1,18 @@
 import React, {useEffect, useCallback, useState} from 'react';
-import {StyleSheet, View, Text, SafeAreaView, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import CardComponent from '../../components/CardComponent';
 import LoadingComponent from '../../components/LoadingComponent';
 import ErrorComponent from '../../components/ErrorComponent';
 import {PieChart} from 'react-native-svg-charts';
+import {NavigateTo} from '../../constants';
+import {localStorage} from '../../helpers';
 
 const DashboardScreen = (props: any) => {
   const navigation = props.navigation;
@@ -17,6 +26,10 @@ const DashboardScreen = (props: any) => {
   const [userDetails, setuserDetails] = useState<[]>([]);
 
   const getPeople = useCallback(() => {
+    localStorage.setItem('Propacity', {
+      screen: 'DashboardScreen',
+      state: 'normal',
+    });
     setIsLoading(true);
     setIsLoaded(false);
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -34,7 +47,11 @@ const DashboardScreen = (props: any) => {
 
   useEffect(() => {
     getPeople();
-  }, [getPeople]);
+    const focusListener = navigation.addListener('focus', getPeople);
+    return () => {
+      focusListener();
+    };
+  }, [getPeople, navigation]);
 
   const getPeopleAlbumData = useCallback((getPeopleData: any) => {
     setIsLoading(true);
@@ -109,6 +126,10 @@ const DashboardScreen = (props: any) => {
     };
   });
 
+  const get = useCallback(async () => {
+    const data = await localStorage.getItem('Propacity');
+    console.log('data: ', data);
+  }, []);
   return (
     <>
       {isLoading && <LoadingComponent />}
@@ -121,7 +142,12 @@ const DashboardScreen = (props: any) => {
           keyboardShouldPersistTaps={'handled'}>
           <SafeAreaView style={styles.wrapper}>
             <View style={styles.header}>
-              <Text style={styles.headerTitle}>Photos</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  get();
+                }}>
+                <Text style={styles.headerTitle}>Photos</Text>
+              </TouchableOpacity>
             </View>
             <Text style={styles.contentTitle}>People</Text>
             {peopleData.map((item: any, index: any) => {
@@ -135,6 +161,12 @@ const DashboardScreen = (props: any) => {
                   lat={item.address.geo.lat}
                   lng={item.address.geo.lng}
                   albumCount={totalAlbumCount[index]}
+                  onPress={() => {
+                    navigation.navigate(NavigateTo.AlbumScreen, {
+                      id: item.id,
+                      name: item.name,
+                    });
+                  }}
                 />
               );
             })}

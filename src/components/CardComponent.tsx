@@ -15,10 +15,12 @@ export interface CardComponentProps {
   albumCount: string;
   lat?: string;
   lng?: string;
+  onPress?: () => void;
 }
 
 const CardComponent = (props: CardComponentProps) => {
-  const {name, email, phoneNumber, companyName, lat, lng, albumCount} = props;
+  const {name, email, phoneNumber, companyName, lat, lng, albumCount, onPress} =
+    props;
 
   const openGoogleMap = () => {
     const scheme = Platform.select({ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
@@ -34,7 +36,13 @@ const CardComponent = (props: CardComponentProps) => {
     }
   };
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        if (onPress) {
+          onPress();
+        }
+      }}>
       <Text style={styles.nameText}>{name}</Text>
       <View style={styles.emailPhoneWrapper}>
         <Text style={styles.emailPhoneText}>{email}</Text>
@@ -58,7 +66,7 @@ const CardComponent = (props: CardComponentProps) => {
         </TouchableOpacity>
         <Text style={styles.commonText}>{albumCount}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

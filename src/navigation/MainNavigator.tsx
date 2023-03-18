@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigateTo} from '../constants';
 import StartupScreen from '../screens/StartupScreen';
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
+import AlbumScreen from '../screens/dashboard/AlbumScreen';
 const MainStack = createNativeStackNavigator();
 
 const MainNavigator = () => {
@@ -16,6 +17,11 @@ const MainNavigator = () => {
       <MainStack.Screen
         name={NavigateTo.DashboardScreen}
         component={DashboardScreen}
+        options={{headerShown: false}}
+      />
+      <MainStack.Screen
+        name={NavigateTo.AlbumScreen}
+        component={AlbumScreen}
         options={{headerShown: false}}
       />
     </MainStack.Navigator>
